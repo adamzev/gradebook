@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'book.urls'
+ROOT_URLCONF = 'gradebook.urls'
 
 TEMPLATES = [
     {
@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'book.wsgi.application'
+WSGI_APPLICATION = 'gradebook.wsgi.application'
 
 
 # Database
