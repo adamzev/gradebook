@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from grades import views as gradeviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', gradeviews.home_page, name='home')
 ]
