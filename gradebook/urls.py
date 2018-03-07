@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from grades import views as gradeviews
+from users import views as userviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', gradeviews.home_page, name='home')
+    path('', gradeviews.home_page, name='home'),
+    path('sign_up/', userviews.sign_up, name='sign_up'),
 ]

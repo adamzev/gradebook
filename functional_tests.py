@@ -14,24 +14,26 @@ class NewVisitorTest(unittest.TestCase):
     def test_can_enter_grades_and_retrieve_them_later(self):
         # Lizzie has heard about a new site to store her grades.
         # She checks out the homepage
-        self.browser.get('http://localhost:8000')
+        self.browser.get('http://localhost:8080')
 
         # She notices the page title mentions Gradebook
         self.assertIn('Gradebook', self.browser.title)
-        self.fail("Finish the test!")
+
 
         # She is invited to log in or create an account
         # She is new to the site so she creates an account
 
-        ccount_link = self.browser.find_element_by_link_text('Create account')
+        account_link = self.browser.find_element_by_link_text('Create account')
         account_link.click()
-                
+
+        self.assertIn('Sign up', self.browser.title)
+
         inputbox = self.browser.find_element_by_id('username')
         inputbox.send_keys('Lizzie')
         passwordbox = self.browser.find_element_by_id('password')
-        inputbox.send_keys('qwerty12345@')
-                                                
-        user = self.browser.find_elemnt_by_name('user')
+        passwordbox.send_keys('qwerty12345@')
+        passwordbox.send_keys(Keys.ENTER)
+        user = self.browser.find_element_by_name('user')
         time.sleep(1)
         self.assertIn('Lizzie', user)
         # Now she has created an account she can log in.
