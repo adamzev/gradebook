@@ -1,4 +1,7 @@
+import time
+
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import unittest
 
 class NewVisitorTest(unittest.TestCase):
@@ -20,12 +23,25 @@ class NewVisitorTest(unittest.TestCase):
         # She is invited to log in or create an account
         # She is new to the site so she creates an account
 
+        ccount_link = self.browser.find_element_by_link_text('Create account')
+        account_link.click()
+                
+        inputbox = self.browser.find_element_by_id('username')
+        inputbox.send_keys('Lizzie')
+        passwordbox = self.browser.find_element_by_id('password')
+        inputbox.send_keys('qwerty12345@')
+                                                
+        user = self.browser.find_elemnt_by_name('user')
+        time.sleep(1)
+        self.assertIn('Lizzie', user)
         # Now she has created an account she can log in.
         # She sees her name listed as the current user
 
+        header_text = self.browser.find_element_by_tag_name('h2').text
+        self.assertIn('Create a new assignment', header_text)
         # She is offered to create a new assignment
         # She creates a new assignment called "Two digit addition"
-
+        self.fail('Finish the test!')
         # She is offered the ability to enter students
 
         # She enters Sue and Little Bobbie
