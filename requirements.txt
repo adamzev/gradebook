@@ -1,0 +1,4 @@
+Django==2.0.2
+django-shortcuts==1.5
+pytz==2018.3
+selenium==3.9.0
