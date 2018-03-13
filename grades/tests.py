@@ -11,14 +11,3 @@ class HomePageTest(TestCase):
         response = self.client.get('/')
 
         self.assertTemplateUsed(response, 'home.html')
-
-class SignUpTest(TestCase):
-    def test_sign_up_page_returns_correct_html(self):
-        response = self.client.get('/sign_up/')
-
-        self.assertTemplateUsed(response, 'sign_up.html')
-
-    def test_can_create_new_user(self):
-        response = self.client.post('/sign_up/', data={'username': 'adam', 'password':'qwerty123!@#'})
-        self.assertIn('adam', response.content.decode())
-        self.assertTemplateUsed(response, 'welcome.html')
