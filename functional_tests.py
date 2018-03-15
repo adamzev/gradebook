@@ -28,12 +28,18 @@ class NewVisitorTest(unittest.TestCase):
 
         self.assertIn('Sign up', self.browser.title)
 
-        inputbox = self.browser.find_element_by_id('username')
+        inputbox = self.browser.find_element_by_id('id_username')
         inputbox.send_keys('Lizzie')
-        passwordbox = self.browser.find_element_by_id('password')
+
+        # She enters and confirms her new password
+        passwordbox = self.browser.find_element_by_id('id_password1')
         passwordbox.send_keys('qwerty12345@')
+        passwordbox = self.browser.find_element_by_id('id_password2')
+        passwordbox.send_keys('qwerty12345@')
+
         passwordbox.send_keys(Keys.ENTER)
-        user = self.browser.find_element_by_name('user')
+        time.sleep(15)
+        user = self.browser.find_element_by_id('user')
         time.sleep(1)
         self.assertIn('Lizzie', user)
         # Now she has created an account she can log in.
