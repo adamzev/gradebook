@@ -7,5 +7,5 @@ urlpatterns = [
     # Auth urls: login, logout, password_change, password_change/done,
     # password_reset, password_reset/done, reset/<uidb64>/<token>, reset/done
     path('', include('django.contrib.auth.urls')),
-    path('signup/', views.sign_up, name='sign_up'),
+    path('sign_up/', views.sign_up, name='sign_up'),
 ]

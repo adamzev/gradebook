@@ -5,9 +5,9 @@ from django.contrib.auth.models import User
 # Create your tests here.
 class SignUpTest(TestCase):
     def test_sign_up_page_returns_correct_html(self):
-        response = self.client.get('/sign_up/')
+        response = self.client.get('/users/sign_up/')
 
-        self.assertTemplateUsed(response, 'sign_up.html')
+        self.assertTemplateUsed(response, 'registration/sign_up.html')
 
     def test_user_can_be_created(self):
         all_users = User.objects.all()
@@ -26,8 +26,11 @@ class SignUpTest(TestCase):
     def test_can_create_new_user(self):
         data = {
             'username': 'adam', 
-            'password':'qwerty123!@#',
+            'password1':'qwerty123!@#',
+            'password2':'qwerty123!@#',
         }
-        response = self.client.post('/sign_up/', data=data)
-        self.assertIn('adam', response.content.decode())
+        response = self.client.post('/users/sign_up/', data=data)
+        self.assertRedirects(response, f'/welcome/')
+        response = self.client.get('/welcome/')
         self.assertTemplateUsed(response, 'welcome.html')
+        self.assertIn('adam', response.content.decode())

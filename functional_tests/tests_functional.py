@@ -1,20 +1,34 @@
+import os
 import time
 
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 
-class NewVisitorTest(unittest.TestCase):
+MAX_WAIT = 10
+
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
 
+    def wait_for(self, func):
+        start_time = time.time()
+        while True:
+            try:
+                return func()
+            except (AssertionError, WebDriverException) as e:
+                if time.time() - start_time > MAX_WAIT:
+                    raise e
+                time.sleep(0.5)
+
     def test_can_enter_grades_and_retrieve_them_later(self):
         # Lizzie has heard about a new site to store her grades.
         # She checks out the homepage
-        self.browser.get('http://localhost:8080')
+        self.browser.get(self.live_server_url)
 
         # She notices the page title mentions Gradebook
         self.assertIn('Gradebook', self.browser.title)
@@ -38,15 +52,14 @@ class NewVisitorTest(unittest.TestCase):
         passwordbox.send_keys('qwerty12345@')
 
         passwordbox.send_keys(Keys.ENTER)
-        time.sleep(15)
-        user = self.browser.find_element_by_id('user')
         time.sleep(1)
-        self.assertIn('Lizzie', user)
+        user = self.browser.find_element_by_id('user')
+        self.assertIn('Lizzie', user.get_attribute('innerHTML'))
         # Now she has created an account she can log in.
         # She sees her name listed as the current user
 
         header_text = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('Create a new assignment', header_text)
+        self.assertIn('Create a new assignment', header_text.get_attribute('innerHTML'))
         # She is offered to create a new assignment
         # She creates a new assignment called "Two digit addition"
         self.fail('Finish the test!')
