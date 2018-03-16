@@ -23,5 +23,6 @@ urlpatterns = [
     path('', gradeviews.home_page, name='home'),
     path('welcome/', gradeviews.welcome, name='welcome'),
     path('users/', include('users.urls')),
+    path('students/', include('students.urls')),
 
 ]

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Enter a new student</h3>
+<form action='/students/new/' method="POST">
+    {% csrf_token %}
+    <input id="new_student" name="name" placeholder="Enter a new student's name" type="text"/>
+    <input type="hidden" id="return_page" name="return_page" value="/students/">
+</form>
+<div id="student_list">
+{% for student in students %}
+    <p>{{ student.name }}</p>
+{% endfor %}
+</div>
+{% endblock %}

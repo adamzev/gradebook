@@ -53,19 +53,42 @@ class NewVisitorTest(LiveServerTestCase):
 
         passwordbox.send_keys(Keys.ENTER)
         time.sleep(1)
-        user = self.browser.find_element_by_id('user')
-        self.assertIn('Lizzie', user.get_attribute('innerHTML'))
+        user = self.browser.find_element_by_id('user').text
+        self.assertIn('Lizzie', user)
         # Now she has created an account she can log in.
         # She sees her name listed as the current user
 
-        header_text = self.browser.find_element_by_tag_name('h2').text
-        self.assertIn('Create a new assignment', header_text.get_attribute('innerHTML'))
+        # She is offered the ability to enter students
+        header_text = self.browser.find_elements_by_tag_name('h3')
+
+        self.assertIn('Enter a new student', [x.text for x in header_text])
+
+        student_input_box = self.browser.find_element_by_id('new_student')
+        student_input_box.send_keys('Sue')
+        student_input_box.send_keys(Keys.ENTER)
+        time.sleep(1)
+        student_list = self.browser.find_element_by_id('student_list').text
+
+        self.assertIn('Sue', student_list)
+
+        student_input_box = self.browser.find_element_by_id('new_student')
+        student_input_box.send_keys('Little Bobbie')
+        student_input_box.send_keys(Keys.ENTER)
+        time.sleep(1)
+        student_list = self.browser.find_element_by_id('student_list').text
+        self.assertIn('Sue', student_list)
+        self.assertIn('Little Bobbie', student_list)
+
+        # She enters Sue and Little Bobbie
+        
+        #self.assertIn('Create a new assignment', header_text.get_attribute('innerHTML'))
+
         # She is offered to create a new assignment
         # She creates a new assignment called "Two digit addition"
         self.fail('Finish the test!')
-        # She is offered the ability to enter students
+        
 
-        # She enters Sue and Little Bobbie
+       
 
         # She enters grades for "Two digit addition" for Sue and Little Bobbie
         # Sue got a 97, little Bobbie got a 85

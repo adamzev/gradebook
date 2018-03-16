@@ -23,7 +23,7 @@ class SignUpTest(TestCase):
         self.assertEqual(prev_count + 1, cur_count)
 
 
-    def test_can_create_new_user(self):
+    def test_can_create_new_user_using_form(self):
         data = {
             'username': 'adam', 
             'password1':'qwerty123!@#',
@@ -32,5 +32,5 @@ class SignUpTest(TestCase):
         response = self.client.post('/users/sign_up/', data=data)
         self.assertRedirects(response, f'/welcome/')
         response = self.client.get('/welcome/')
-        self.assertTemplateUsed(response, 'welcome.html')
+        self.assertTemplateUsed(response, 'dashboard.html')
         self.assertIn('adam', response.content.decode())

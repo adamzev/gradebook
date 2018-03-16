@@ -5,4 +5,4 @@ def home_page(request):
     return render(request, 'home.html')
 
 def welcome(request):
-    return render(request, 'welcome.html')
+    return render(request, 'dashboard.html')
