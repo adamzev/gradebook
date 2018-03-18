@@ -21,8 +21,9 @@ from users import views as userviews
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', gradeviews.home_page, name='home'),
-    path('welcome/', gradeviews.welcome, name='welcome'),
+    path('dashboard/', gradeviews.dashboard, name='dashboard'),
     path('users/', include('users.urls')),
     path('students/', include('students.urls')),
+    path('assignments/', include('assignments.urls')),
 
 ]

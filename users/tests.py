@@ -30,7 +30,7 @@ class SignUpTest(TestCase):
             'password2':'qwerty123!@#',
         }
         response = self.client.post('/users/sign_up/', data=data)
-        self.assertRedirects(response, f'/welcome/')
-        response = self.client.get('/welcome/')
+        self.assertRedirects(response, f'/dashboard/')
+        response = self.client.get('/dashboard/')
         self.assertTemplateUsed(response, 'dashboard.html')
         self.assertIn('adam', response.content.decode())

@@ -7,6 +7,13 @@ from selenium.webdriver.common.keys import Keys
 import unittest
 
 MAX_WAIT = 10
+# TODO Document the core functionality: a teacher can send out the same assignment to students both online
+# and with a printed worksheet and track the results in the same place
+# TODO add feature: create an assignment/worksheet
+# TODO select which students will do the assignment online and which will do it using paper
+# TODO set the default setting of the above to be based on what the student did previously
+# TODO add in classes
+# TODO add in various grading systems (complete/incomplete, check, check- check+, percentage grade)
 
 class NewVisitorTest(LiveServerTestCase):
     def setUp(self):
@@ -63,12 +70,12 @@ class NewVisitorTest(LiveServerTestCase):
 
         self.assertIn('Enter a new student', [x.text for x in header_text])
 
+        # She enters Sue and Little Bobbie
         student_input_box = self.browser.find_element_by_id('new_student')
         student_input_box.send_keys('Sue')
         student_input_box.send_keys(Keys.ENTER)
         time.sleep(1)
         student_list = self.browser.find_element_by_id('student_list').text
-
         self.assertIn('Sue', student_list)
 
         student_input_box = self.browser.find_element_by_id('new_student')
@@ -79,11 +86,19 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertIn('Sue', student_list)
         self.assertIn('Little Bobbie', student_list)
 
-        # She enters Sue and Little Bobbie
         
-        #self.assertIn('Create a new assignment', header_text.get_attribute('innerHTML'))
+        # She is offered the ability to create a new assignment
+        header_text = self.browser.find_elements_by_tag_name('h3')
+        self.assertIn('Create a new assignment', [x.text for x in header_text])
 
-        # She is offered to create a new assignment
+        assignment_input_box = self.browser.find_element_by_id('new_assignment')
+        assignment_input_box.send_keys('Two digit addition')
+        assignment_input_box.send_keys(Keys.ENTER)
+        time.sleep(1)
+        assignment_list = self.browser.find_element_by_id('assignment_list').text
+        self.assertIn('Two digit addition', assignment_list)
+
+
         # She creates a new assignment called "Two digit addition"
         self.fail('Finish the test!')
         

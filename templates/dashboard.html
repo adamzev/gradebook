@@ -9,8 +9,23 @@
         <form action='/students/new/' method="POST">
             {% csrf_token %}
             <input id="new_student" name="name" placeholder="Enter a new student's name" type="text"/>
-            <input type="hidden" id="return_page" name="return_page" value="/students/">
+            <input type="hidden" id="return_page" name="return_page" value="/dashboard/">
         </form>
-        <h3>Enter a new assignment</h3>
+        <div id="student_list">
+            {% for student in students %}
+                <p>{{ student.name }}</p>
+            {% endfor %}
+        </div>
+        <h3>Create a new assignment</h3>
+        <form action='/assignments/new/' method="POST">
+            {% csrf_token %}
+            <input id="new_assignment" name="name" placeholder="Enter a new assignment" type="text"/>
+            <input type="hidden" id="return_page" name="return_page" value="/dashboard/">
+        </form>
+        <div id="assignment_list">
+            {% for assignment in assignments %}
+                <p>{{ assignment.name }}</p>
+            {% endfor %}
+        </div>
     </body>
 </html>

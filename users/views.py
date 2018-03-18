@@ -8,7 +8,7 @@ from django.views import generic
 '''
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
-    success_url = reverse_lazy('welcome')
+    success_url = reverse_lazy('dashboard')
     template_name = 'registration/sign_up.html'
 '''
 
@@ -24,7 +24,7 @@ def sign_up(request):
                                     password=form.cleaned_data['password1'],
                                     )
             login(request, new_user)
-            return redirect("/welcome/")
+            return redirect("/dashboard/")
         else:
             messages.warning(request, "Form is invalid")
             view_data = {
