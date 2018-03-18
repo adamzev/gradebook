@@ -20,6 +20,9 @@
         <form action='/assignments/new/' method="POST">
             {% csrf_token %}
             <input id="new_assignment" name="name" placeholder="Enter a new assignment" type="text"/>
+            <select id="group_for_assignment">
+                <option value="all">All</option>
+            </select>
             <input type="hidden" id="return_page" name="return_page" value="/dashboard/">
         </form>
         <div id="assignment_list">
