@@ -1,4 +1,4 @@
 from django.db import models
 
-class Assignment(models.Model):
+class Task(models.Model):
     name = models.TextField()

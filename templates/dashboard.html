@@ -16,21 +16,21 @@
                 <p>{{ student.name }}</p>
             {% endfor %}
         </div>
-        <h3>Create a new assignment</h3>
-        <form action='/assignments/new/' method="POST">
+        <h3>Create a new task</h3>
+        <form action='/assignments/tasks/new/' method="POST">
             {% csrf_token %}
-            <input id="new_assignment" name="name" placeholder="Enter a new assignment" type="text"/>
-            <select id="group_for_assignment" name="group_for_assignment">
+            <input id="new_task" name="name" placeholder="Enter a new task" type="text"/>
+            <select id="group_for_task" name="group_for_task">
                 <option value="all">All</option>
             </select>
             <input type="hidden" id="return_page" name="return_page" value="/dashboard/">
         </form>
-        <div id="assignment_list">
-            {% for assignment in assignments %}
-                <p>{{ assignment.name }}</p>
+        <div id="task_list">
+            {% for task in tasks %}
+                <p>{{ task.name }}</p>
                 
                 <ul>
-                {% for student in assignment.students %}
+                {% for student in task.students %}
                     <li>{{ student.name }}</li>
                 {% endfor %}
                 </ul>

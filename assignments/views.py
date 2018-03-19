@@ -1,34 +1,34 @@
 from django.shortcuts import render, redirect, HttpResponse
-from .models import Assignment
+from .models import Task
 from students.models import Group, Student
 # Create your views here.
-def new_assignment(request):
-    if request.POST['group_for_assignment'] == 'all':
+def new_task(request):
+    if request.POST['group_for_task'] == 'all':
         group = Group.objects.create(name='all')
         students = list(Student.objects.all())
         group.Students.add(*students)
         group.save()
     
-    assignment = Assignment.objects.create(name=request.POST['name'])
-    assignment.Groups.add(group)
-    assignment.save()
+    task = Task.objects.create(name=request.POST['name'])
+    task.Groups.add(group)
+    task.save()
     return_page = request.POST.get('return_page', '/')
     return redirect(return_page)
 
-def show_assignments(request):
-    assignments = Assignment.objects.all()
+def show_tasks(request):
+    tasks = Task.objects.all()
     
-    assignments_for_view = []
-    for assignment in assignments:
-        assignment.groups = assignment.Groups.all()
-        assignment.students = []
-        for group in assignment.groups:
+    tasks_for_view = []
+    for task in tasks:
+        task.groups = task.Groups.all()
+        task.students = []
+        for group in task.groups:
             
-            assignment.students += group.Students.all()
-        assignments_for_view.append(assignment)
+            task.students += group.Students.all()
+        tasks_for_view.append(task)
 
     view_data = {
-        "assignments": assignments_for_view
+        "tasks": tasks_for_view
     }
 
-    return render(request, 'assignments.html', view_data)
+    return render(request, 'tasks.html', view_data)

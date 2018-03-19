@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from students.models import Student
-from assignments.models import Assignment
+from assignments.models import Task
 
 # Create your views here.
 def home_page(request):
@@ -8,21 +8,21 @@ def home_page(request):
 
 def dashboard(request):
     students = Student.objects.all()
-    assignments = Assignment.objects.all()
+    tasks = Task.objects.all()
     
-    assignments_for_view = []
-    for assignment in assignments:
-        assignment.groups = assignment.Groups.all()
-        assignment.students = []
-        for group in assignment.groups:
+    tasks_for_view = []
+    for task in tasks:
+        task.groups = task.Groups.all()
+        task.students = []
+        for group in task.groups:
             
-            assignment.students += group.Students.all()
-        assignments_for_view.append(assignment)
+            task.students += group.Students.all()
+        tasks_for_view.append(task)
 
     
     view_data = {
         "students": students,
-        "assignments": assignments_for_view,
+        "tasks": tasks_for_view,
     }
     return render(request, 'dashboard.html', view_data)
 

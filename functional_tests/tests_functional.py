@@ -13,13 +13,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
 MAX_WAIT = 10
-# TODO Document the core functionality: a teacher can send out the same assignment to students both online
+
+# TODO move the following to a design document
+# TODO Document the core functionality: a teacher can send out the same task to students both online
 # and with a printed worksheet and track the results in the same place
-# TODO add feature: create an assignment/worksheet
-# TODO select which students will do the assignment online and which will do it using paper
+# TODO add feature: create an task/worksheet
+# TODO select which students will do the task online and which will do it using paper
 # TODO set the default setting of the above to be based on what the student did previously
-# TODO add in classes
 # TODO add in various grading systems (complete/incomplete, check, check- check+, percentage grade)
+
 def wait_for(func):
     start_time = time.time()
     while True:
@@ -41,8 +43,8 @@ def create_pre_authenticated_session(username, password):
 def get_student_list(browser):
     return browser.find_element_by_id('student_list')
 
-def get_assignment_list(browser):
-    return browser.find_element_by_id('assignment_list')
+def get_task_list(browser):
+    return browser.find_element_by_id('task_list')
 
 class NewUserTest(LiveServerTestCase):
     @classmethod
@@ -197,29 +199,29 @@ class LoggedInUserTests(LiveServerTestCase):
         wait_for(lambda: self.assertIn('Little Bobbie', get_student_list(self.browser).text))
 
         
-        # She is offered the ability to create a new assignment and assign it to a class
+        # She is offered the ability to create a new task and assign it to a class
         header_text = self.browser.find_elements_by_tag_name('h3')
-        self.assertIn('Create a new assignment', [x.text for x in header_text])
+        self.assertIn('Create a new task', [x.text for x in header_text])
 
-        # She creates a new assignment called "Two digit addition"
-        assignment_input_box = self.browser.find_element_by_id('new_assignment')
-        assignment_input_box.send_keys('Two digit addition')
+        # She creates a new task called "Two digit addition"
+        task_input_box = self.browser.find_element_by_id('new_task')
+        task_input_box.send_keys('Two digit addition')
 
-        group_select_box = Select(self.browser.find_element_by_id('group_for_assignment'))
+        group_select_box = Select(self.browser.find_element_by_id('group_for_task'))
         group_select_box.select_by_visible_text("All")
-        assignment_input_box.send_keys(Keys.ENTER)
+        task_input_box.send_keys(Keys.ENTER)
         
-        wait_for(lambda: self.assertIn('Two digit addition', get_assignment_list(self.browser).text))
-        self.assertIn('Sue', get_assignment_list(self.browser).text)
-        self.assertIn('Little Bobbie', get_assignment_list(self.browser).text)
+        wait_for(lambda: self.assertIn('Two digit addition', get_task_list(self.browser).text))
+        self.assertIn('Sue', get_task_list(self.browser).text)
+        self.assertIn('Little Bobbie', get_task_list(self.browser).text)
 
         # She enters grades for "Two digit addition" for Sue and Little Bobbie
         # Sue got a 97, little Bobbie got a 85
 
-        student_grade_inputs = self.browser.find_element_by_class('grade_for_student')
+        student_grade_inputs = self.browser.find_element_by_class_name('grade_for_student')
 
         for student_grade_input in student_grade_inputs:
-            if student_grade_input.get_attribute("data-assignment-name") == 'Two digit addition':
+            if student_grade_input.get_attribute("data-task-name") == 'Two digit addition':
                 if student_grade_input.get_attribute("data-student-name") == "Sue":
                     student_grade_input.send_keys('97')
                 elif student_grade_input.get_attribute("data-student-name") == "Little Bobbie":
