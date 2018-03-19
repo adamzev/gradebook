@@ -20,7 +20,7 @@
         <form action='/assignments/new/' method="POST">
             {% csrf_token %}
             <input id="new_assignment" name="name" placeholder="Enter a new assignment" type="text"/>
-            <select id="group_for_assignment">
+            <select id="group_for_assignment" name="group_for_assignment">
                 <option value="all">All</option>
             </select>
             <input type="hidden" id="return_page" name="return_page" value="/dashboard/">
@@ -28,6 +28,12 @@
         <div id="assignment_list">
             {% for assignment in assignments %}
                 <p>{{ assignment.name }}</p>
+                
+                <ul>
+                {% for student in assignment.students %}
+                    <li>{{ student.name }}</li>
+                {% endfor %}
+                </ul>
             {% endfor %}
         </div>
     </body>

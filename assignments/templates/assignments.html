@@ -9,6 +9,11 @@
 <div id="assignment_list">
     {% for assignment in assignments %}
         <p>{{ assignment.name }}</p>
+        <ul>
+            {% for student in assignment.students %}
+                <li>{{ student.name }}</li>
+            {% endfor %}
+        </ul>
     {% endfor %}
 </div>
 {% endblock %}

@@ -85,6 +85,7 @@ class NewUserTest(LiveServerTestCase):
         self.assertIn('Lizzie', user)
         # Now she has created an account she can log in.
         # She sees her name listed as the current user
+
 class LogInTests(LiveServerTestCase):
     fixtures = ['users.json']
 

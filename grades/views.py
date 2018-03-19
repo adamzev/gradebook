@@ -10,8 +10,19 @@ def dashboard(request):
     students = Student.objects.all()
     assignments = Assignment.objects.all()
     
+    assignments_for_view = []
+    for assignment in assignments:
+        assignment.groups = assignment.Groups.all()
+        assignment.students = []
+        for group in assignment.groups:
+            
+            assignment.students += group.Students.all()
+        assignments_for_view.append(assignment)
+
+    
     view_data = {
         "students": students,
-        "assignments": assignments,
+        "assignments": assignments_for_view,
     }
     return render(request, 'dashboard.html', view_data)
+
