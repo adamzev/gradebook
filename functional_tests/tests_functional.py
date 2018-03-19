@@ -85,9 +85,31 @@ class NewUserTest(LiveServerTestCase):
         self.assertIn('Lizzie', user)
         # Now she has created an account she can log in.
         # She sees her name listed as the current user
-    
+class LogInTests(LiveServerTestCase):
+    fixtures = ['users.json']
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+
     def test_user_can_login(self):
-        self.fail("write test")
+        self.browser.get(self.live_server_url + '/users/login/')
+        header_text = self.browser.find_elements_by_tag_name('h3')
+
+        self.assertIn('Log in', [x.text for x in header_text])
+
+        # She enters Sue and Little Bobbie
+        input_box = self.browser.find_element_by_id('id_username')
+        input_box.send_keys('AdamLevin')
+
+        input_box = self.browser.find_element_by_id('id_password')
+        input_box.send_keys('htgc87aa')
+
+        input_box.send_keys(Keys.ENTER)
+
+        wait_for(lambda: self.assertIn('AdamLevin', self.browser.find_element_by_id('user').text))
 
 
 class LoggedInUserTests(LiveServerTestCase):
