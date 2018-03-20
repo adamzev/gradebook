@@ -1,10 +1,14 @@
+import logging
+
 from django.test import TestCase
 
 # Create your tests here.
 from django.test import TestCase
 
-from .models import Task
+from .models import Task, Assignment
 from students.models import Student, Group
+
+logger = logging.getLogger(__name__)
 # Create your tests here.
 class TasksTest(TestCase):
     def test_task_can_be_created(self):
@@ -50,4 +54,17 @@ class TasksTest(TestCase):
         response = self.client.post('/assignments/tasks/new/', data=data)
         response = self.client.get('/assignments/tasks/')
         self.assertIn('Hard worksheet', response.content.decode())
+
+    def test_student_can_get_grade_for_task(self):
+        student1 = Student.objects.create(name="Mary")
+        student_pk = student1.pk
+        task1 = Task.objects.create(name='Algebra Quiz')
+        assignment1 = Assignment(student=student1, task=task1, grade=85, completed=True)
+        assignment1.save()
+        logger.debug(task1)
+        student1_from_db = Student.objects.get(pk=student_pk)
+
+        task = student1_from_db.tasks.first()
+
+        self.assertEqual(task.assignments.first().grade, 85)
 

@@ -1,6 +1,10 @@
+import logging
+
 from django.shortcuts import render, redirect, HttpResponse
 from .models import Task
 from students.models import Group, Student
+
+logger = logging.getLogger(__name__)
 # Create your views here.
 def new_task(request):
     if request.POST['group_for_task'] == 'all':
@@ -17,7 +21,7 @@ def new_task(request):
 
 def show_tasks(request):
     tasks = Task.objects.all()
-    
+    logger.debug(tasks)
     tasks_for_view = []
     for task in tasks:
         task.groups = task.Groups.all()

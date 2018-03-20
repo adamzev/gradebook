@@ -17,14 +17,7 @@
             {% endfor %}
         </div>
         <h3>Create a new task</h3>
-        <form action='/assignments/tasks/new/' method="POST">
-            {% csrf_token %}
-            <input id="new_task" name="name" placeholder="Enter a new task" type="text"/>
-            <select id="group_for_task" name="group_for_task">
-                <option value="all">All</option>
-            </select>
-            <input type="hidden" id="return_page" name="return_page" value="/dashboard/">
-        </form>
+        {% include "task_form.html" %}
         <div id="task_list">
             {% for task in tasks %}
                 <p>{{ task.name }}</p>
