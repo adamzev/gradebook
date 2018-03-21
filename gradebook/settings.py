@@ -160,5 +160,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+LOGIN_URL = '/users/login/'
+
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/dashboard/'

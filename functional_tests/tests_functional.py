@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib.sessions.backends.db import SessionStore
 from django.test import LiveServerTestCase
 from selenium import webdriver
-from selenium.common.exceptions import WebDriverException
+from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
@@ -45,6 +45,19 @@ def get_student_list(browser):
 
 def get_task_list(browser):
     return browser.find_element_by_id('task_list')
+
+def login_user(browser, live_server_url, username, password):
+    browser.get(live_server_url + '/users/login/')
+
+    input_box = browser.find_element_by_id('id_username')
+    input_box.send_keys(username)
+
+    input_box = browser.find_element_by_id('id_password')
+    input_box.send_keys(password)
+
+    input_box.send_keys(Keys.ENTER)
+
+    wait_for(lambda: browser.find_element_by_id('user')).text
 
 class NewUserTest(LiveServerTestCase):
     @classmethod
@@ -100,35 +113,18 @@ class LogInTests(LiveServerTestCase):
     def test_user_can_login(self):
         self.browser.get(self.live_server_url + '/users/login/')
         header_text = self.browser.find_elements_by_tag_name('h3')
-
         self.assertIn('Log in', [x.text for x in header_text])
 
-        # She enters Sue and Little Bobbie
-        input_box = self.browser.find_element_by_id('id_username')
-        input_box.send_keys('AdamLevin')
-
-        input_box = self.browser.find_element_by_id('id_password')
-        input_box.send_keys('htgc87aa')
-
-        input_box.send_keys(Keys.ENTER)
+        login_user(self.browser, self.live_server_url, 'AdamLevin', 'htgc87aa')
 
         wait_for(lambda: self.assertIn('AdamLevin', self.browser.find_element_by_id('user').text))
 
 
-class LoggedInUserTests(LiveServerTestCase):
-    @classmethod
-    def login_user(cls):
-        '''
-        cls.browser.get(cls.live_server_url)
-        session_key = create_pre_authenticated_session('Lizzie', 'qwerty12345@')
-        cls.browser.add_cookie(dict(
-            name=settings.SESSION_COOKIE_NAME,
-            value=session_key,
-            path='/',
-        ))
-        cls.browser.refresh()
+class MainFeatureTests(LiveServerTestCase):
 
-        '''
+    fixtures = ['users.json'] # contains Adam Levin but not Lizzie
+    @classmethod
+    def create_user(cls):
         cls.browser.get(cls.live_server_url)
 
 
@@ -151,7 +147,7 @@ class LoggedInUserTests(LiveServerTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.browser = webdriver.Firefox()
-        cls.login_user()
+        cls.create_user()
 
     def setUp(self):
         pass
@@ -228,15 +224,51 @@ class LoggedInUserTests(LiveServerTestCase):
                     student_grade_input.send_keys('85')
 
         student_grade_inputs[0].send_keys(Keys.ENTER)
-
-        self.fail('Finish the test!')
-
-
-
-
         # Lizzie logs out
+        self.browser.get(self.live_server_url + '/users/logout/')
+
+        self.browser.get(self.live_server_url + '/dashboard/')
+
+        
+        try:
+            user = self.browser.find_element_by_id('user').text
+            self.assertNotIn('Lizzie', user)
+            self.assertNotIn('Two digit addition', get_task_list(self.browser).text)
+        except NoSuchElementException:
+            pass
+            ## since we are looking for these things not to be there, it is okay if they aren't
+
+
+        # Adam logs in and isn't able to see any of Lizzie's assignments
+        login_user(self.browser, self.live_server_url, 'AdamLevin', 'htgc87aa')
+        self.browser.get(self.live_server_url + '/dashboard/')
+        self.assertNotIn('Two digit addition', get_task_list(self.browser).text)
+        self.browser.get(self.live_server_url + '/users/logout/')
 
         # Later, she logs back in and the marks for Sue and Little Bobbie are still there
+        login_user(self.browser, self.live_server_url, 'Lizzie', 'qwerty12345@')
+
+        
+        wait_for(lambda: self.assertIn('Lizzie', self.browser.find_element_by_id('user').text))
+
+        self.browser.get(self.live_server_url + '/dashboard/')
+        
+        student_grade_inputs = self.browser.find_elements_by_class_name('grade_for_student')
+
+        sue_found = False
+        bobbie_found = False
+        for student_grade_input in student_grade_inputs:
+            if student_grade_input.get_attribute("data-task-name") == 'Two digit addition':
+                if student_grade_input.get_attribute("data-student-name") == "Sue":
+                    sue_found = True
+                    self.assertEqual(student_grade_input.value, '97')
+                elif student_grade_input.get_attribute("data-student-name") == "Little Bobbie":
+                    bobbie_found = True
+                    self.assertEqual(student_grade_input.value, '85')
+
+        if not sue_found or not bobbie_found:
+            self.fail("Bobbie or Sue not found")
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
