@@ -218,7 +218,7 @@ class LoggedInUserTests(LiveServerTestCase):
         # She enters grades for "Two digit addition" for Sue and Little Bobbie
         # Sue got a 97, little Bobbie got a 85
 
-        student_grade_inputs = self.browser.find_element_by_class_name('grade_for_student')
+        student_grade_inputs = self.browser.find_elements_by_class_name('grade_for_student')
 
         for student_grade_input in student_grade_inputs:
             if student_grade_input.get_attribute("data-task-name") == 'Two digit addition':

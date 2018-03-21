@@ -30,8 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGGING_CONFIG = None
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -52,18 +50,20 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log',
+            'filename': os.path.join(BASE_DIR, 'gradebook', 'log', 'debug.log'),
+            'formatter': 'verbose'
         },
     },
     'loggers': {
         'gradebook': {
             'handlers': ['console', 'file'],
             'propagate': True,
+            'level': 'DEBUG'
         },
     }
 }
 
-logging.config.dictConfig(LOGGING)
+
 # Application definition
 
 INSTALLED_APPS = [

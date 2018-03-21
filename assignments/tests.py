@@ -61,7 +61,6 @@ class TasksTest(TestCase):
         task1 = Task.objects.create(name='Algebra Quiz')
         assignment1 = Assignment(student=student1, task=task1, grade=85, completed=True)
         assignment1.save()
-        logger.debug(task1)
         student1_from_db = Student.objects.get(pk=student_pk)
 
         task = student1_from_db.tasks.first()

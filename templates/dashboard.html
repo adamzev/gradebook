@@ -23,8 +23,9 @@
                 <p>{{ task.name }}</p>
                 
                 <ul>
-                {% for student in task.students %}
-                    <li>{{ student.name }}</li>
+                {% for assignment in task.assignments.all %}
+                    <li>{{ assignment.student.name }}</li>
+                    <input name="grade_for_student" class="grade_for_student" type="number" value={{assignment.student.grade }}>
                 {% endfor %}
                 </ul>
             {% endfor %}
