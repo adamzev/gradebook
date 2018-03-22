@@ -12,4 +12,4 @@ class Assignment(models.Model):
     grade = models.IntegerField(null=True)
     due_date = models.DateTimeField(null=True)
     completed = models.BooleanField(default=False)
-    
+

@@ -76,3 +76,36 @@ class TasksTest(TestCase):
 
         self.assertEqual(task.assignments.first().grade, 85)
 
+    def test_grade_can_be_updated_using_post(self):
+        user = create_user()
+        self.client.login(username="myusername", password="mypassword")
+        student1 = Student.objects.create(name="Mary")
+
+
+        task = Task.objects.create(name='Second HW', creator=user)
+        task.save()
+
+        assign = Assignment.objects.create(student=student1, task=task)
+        pk = assign.pk
+        assign = None
+        data = {
+            'grade': '85'
+        }
+        self.client.post(f'/assignments/{pk}', data=data)
+        assign_from_db = Assignment.objects.get(pk=pk)
+        self.assertEqual(assign_from_db.grade, 85)
+
+    def test_invalid_grade_not_updated(self):
+        user = create_user()
+        self.client.login(username="myusername", password="mypassword")
+        student1 = Student.objects.create(name="Mary")
+        task = Task.objects.create(name='Second HW', creator=user)
+        task.save()
+        assign = Assignment.objects.create(student=student1, task=task)
+        pk = assign.pk
+        data = {
+            'grade': '-12'
+        }
+        self.client.post(f'/assignments/{pk}', data=data)
+        assign_from_db = Assignment.objects.get(pk=pk)
+        self.assertEqual(assign_from_db.grade, None)

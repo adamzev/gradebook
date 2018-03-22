@@ -214,16 +214,13 @@ class MainFeatureTests(LiveServerTestCase):
         # She enters grades for "Two digit addition" for Sue and Little Bobbie
         # Sue got a 97, little Bobbie got a 85
 
-        student_grade_inputs = self.browser.find_elements_by_class_name('grade_for_student')
-
-        for student_grade_input in student_grade_inputs:
-            if student_grade_input.get_attribute("data-task-name") == 'Two digit addition':
-                if student_grade_input.get_attribute("data-student-name") == "Sue":
-                    student_grade_input.send_keys('97')
-                elif student_grade_input.get_attribute("data-student-name") == "Little Bobbie":
-                    student_grade_input.send_keys('85')
-
-        student_grade_inputs[0].send_keys(Keys.ENTER)
+        student_grade_input1 = self.browser.find_element_by_css_selector('input[data-student-name="Sue"]')
+        student_grade_input1.send_keys('97')
+        student_grade_input1.send_keys(Keys.ENTER)
+        self.browser.get(self.live_server_url + '/dashboard/')
+        student_grade_input2 = self.browser.find_element_by_css_selector('input[data-student-name="Little Bobbie"]')
+        student_grade_input2.send_keys('85')
+        student_grade_input2.send_keys(Keys.ENTER)
         # Lizzie logs out
         self.browser.get(self.live_server_url + '/users/logout/')
 
@@ -261,10 +258,10 @@ class MainFeatureTests(LiveServerTestCase):
             if student_grade_input.get_attribute("data-task-name") == 'Two digit addition':
                 if student_grade_input.get_attribute("data-student-name") == "Sue":
                     sue_found = True
-                    self.assertEqual(student_grade_input.value, '97')
+                    self.assertEqual(student_grade_input.get_attribute('value'), '97')
                 elif student_grade_input.get_attribute("data-student-name") == "Little Bobbie":
                     bobbie_found = True
-                    self.assertEqual(student_grade_input.value, '85')
+                    self.assertEqual(student_grade_input.get_attribute('value'), '85')
 
         if not sue_found or not bobbie_found:
             self.fail("Bobbie or Sue not found")
@@ -272,3 +269,4 @@ class MainFeatureTests(LiveServerTestCase):
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
+

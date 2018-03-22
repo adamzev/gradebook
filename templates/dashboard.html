@@ -23,10 +23,18 @@
                 <p>{{ task.name }}</p>
                 
                 <ul>
-                {% for assignment in task.assignments.all %}
-                    <li>{{ assignment.student.name }}</li>
-                    <input name="grade_for_student" class="grade_for_student" type="number" value={{assignment.student.grade }}>
-                {% endfor %}
+                    {% for assignment in task.assignments.all %}
+                        <li>{{ assignment.student.name }}</li>
+                        <form action="/assignments/{{ assignment.pk }}" method="POST">
+                            {% csrf_token %}
+                            <input name="grade"
+                                class="grade_for_student"
+                                data-task-name="{{ task.name }}"
+                                data-student-name="{{ assignment.student.name }}"
+                                type="number"
+                                value="{{ assignment.grade }}" >
+                        </form>
+                    {% endfor %}
                 </ul>
             {% endfor %}
         </div>

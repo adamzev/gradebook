@@ -1,14 +1,16 @@
 import logging
 
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, reverse
 
 from .models import Task
 from students.models import Group, Student
 from assignments.models import Assignment
+from .forms import UpdateAssignmentForm
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('gradebook')
 
 def new_task(request):
+    # TODO change this to use form validation
     if request.POST['group_for_task'] == 'all':
         group = Group.objects.create(name='all')
         students = list(Student.objects.all())
@@ -39,3 +41,10 @@ def show_tasks(request):
     }
 
     return render(request, 'tasks.html', view_data)
+
+def update_assignment(request, pk):
+    if request.method == 'POST':
+        form = UpdateAssignmentForm(request.POST)
+        if form.is_valid():
+            Assignment.objects.filter(pk=pk).update(**form.cleaned_data)
+    return redirect(reverse('dashboard'))
