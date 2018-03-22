@@ -7,20 +7,26 @@ from django.test import TestCase
 
 from .models import Task, Assignment
 from students.models import Student, Group
+from users.models import User
 
 logger = logging.getLogger(__name__)
 # Create your tests here.
+def create_user():
+    return User.objects.create_user('myusername', 'myemail@crazymail.com', 'mypassword')
+
 class TasksTest(TestCase):
     def test_task_can_be_created(self):
+        user = create_user()
         all_tasks = Task.objects.all()
         prev_count = all_tasks.count()
-        task = Task.objects.create(name='First HW')
+        task = Task.objects.create(name='First HW', creator=user)
         task.save()
         all_tasks = Task.objects.all()
         cur_count = all_tasks.count()
         self.assertEqual(prev_count + 1, cur_count)
 
     def test_task_can_be_assigned_to_custom_group(self):
+        user = create_user()
         student1 = Student.objects.create(name="Mary")
         student2 = Student.objects.create(name="Sue")
 
@@ -29,7 +35,7 @@ class TasksTest(TestCase):
 
         all_tasks = Task.objects.all()
         prev_count = all_tasks.count()
-        task = Task.objects.create(name='First HW')
+        task = Task.objects.create(name='First HW', creator=user)
         task.Groups.add(group)
         task.save()
         pk = task.pk
@@ -47,6 +53,8 @@ class TasksTest(TestCase):
 
 
     def test_can_create_new_task_using_post(self):
+        user = create_user()
+        self.client.login(username='myusername', password='mypassword')
         data = {
             'name': 'Hard worksheet', 
             'group_for_task': 'all'
@@ -56,9 +64,10 @@ class TasksTest(TestCase):
         self.assertIn('Hard worksheet', response.content.decode())
 
     def test_student_can_get_grade_for_task(self):
+        user = create_user()
         student1 = Student.objects.create(name="Mary")
         student_pk = student1.pk
-        task1 = Task.objects.create(name='Algebra Quiz')
+        task1 = Task.objects.create(name='Algebra Quiz', creator=user)
         assignment1 = Assignment(student=student1, task=task1, grade=85, completed=True)
         assignment1.save()
         student1_from_db = Student.objects.get(pk=student_pk)

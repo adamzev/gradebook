@@ -1,12 +1,15 @@
 import logging
 
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse
+
 from .models import Task
 from students.models import Group, Student
 from assignments.models import Assignment
 
 logger = logging.getLogger(__name__)
-# Create your views here.
+
+@login_required
 def new_task(request):
     if request.POST['group_for_task'] == 'all':
         group = Group.objects.create(name='all')
@@ -14,16 +17,17 @@ def new_task(request):
         group.Students.add(*students)
         group.save()
     
-    task = Task.objects.create(name=request.POST['name'])
+    task = Task.objects.create(name=request.POST['name'], creator=request.user)
     for student in group.Students.all():
-        assign = Assignment.objects.create(student=student, task=task)
+        Assignment.objects.create(student=student, task=task)
     task.Groups.add(group)
     task.save()
     return_page = request.POST.get('return_page', '/')
     return redirect(return_page)
 
+@login_required
 def show_tasks(request):
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(creator=request.user)
     tasks_for_view = []
     for task in tasks:
         task.groups = task.Groups.all()

@@ -14,7 +14,7 @@ def home_page(request):
 @login_required
 def dashboard(request):
     students = Student.objects.all()
-    tasks = Task.objects.all().prefetch_related()
+    tasks = Task.objects.filter(creator=request.user).prefetch_related()
 
     view_data = {
         "students": students,
