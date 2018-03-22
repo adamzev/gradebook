@@ -3,7 +3,6 @@ import logging
 from django.shortcuts import render
 from students.models import Student
 from assignments.models import Task
-from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger('gradebook')
 
@@ -11,7 +10,6 @@ logger = logging.getLogger('gradebook')
 def home_page(request):
     return render(request, 'home.html')
 
-@login_required
 def dashboard(request):
     students = Student.objects.all()
     tasks = Task.objects.filter(creator=request.user).prefetch_related()

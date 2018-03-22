@@ -1,6 +1,5 @@
 import logging
 
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse
 
 from .models import Task
@@ -9,7 +8,6 @@ from assignments.models import Assignment
 
 logger = logging.getLogger(__name__)
 
-@login_required
 def new_task(request):
     if request.POST['group_for_task'] == 'all':
         group = Group.objects.create(name='all')
@@ -25,7 +23,6 @@ def new_task(request):
     return_page = request.POST.get('return_page', '/')
     return redirect(return_page)
 
-@login_required
 def show_tasks(request):
     tasks = Task.objects.filter(creator=request.user)
     tasks_for_view = []
