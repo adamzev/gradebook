@@ -1,20 +1,21 @@
+""" Tests the assignment views and models """
 import logging
 
 from django.test import TestCase
 
-# Create your tests here.
-from django.test import TestCase
-
-from .models import Task, Assignment
-from students.models import Student, Group
+from students.models import Group, Student
 from users.models import User
+
+from .models import Assignment, Task
 
 logger = logging.getLogger(__name__)
 # Create your tests here.
 def create_user():
+    """ Creates a user with the name myusername and pasword, mypassword """
     return User.objects.create_user('myusername', 'myemail@crazymail.com', 'mypassword')
 
 class TasksTest(TestCase):
+    """ Tests regarding the Task model """
     def test_task_can_be_created(self):
         user = create_user()
         all_tasks = Task.objects.all()
@@ -53,7 +54,7 @@ class TasksTest(TestCase):
 
 
     def test_can_create_new_task_using_post(self):
-        user = create_user()
+        create_user()
         self.client.login(username='myusername', password='mypassword')
         data = {
             'name': 'Hard worksheet', 

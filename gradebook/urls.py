@@ -18,7 +18,6 @@ from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 
 from grades import views as gradeviews
-from users import views as userviews
 
 urlpatterns = [
     path('admin/', admin.site.urls),

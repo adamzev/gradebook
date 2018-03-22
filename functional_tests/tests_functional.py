@@ -1,4 +1,4 @@
-import os
+""" Functional tests """
 import time
 import unittest
 
@@ -23,6 +23,16 @@ MAX_WAIT = 10
 # TODO add in various grading systems (complete/incomplete, check, check- check+, percentage grade)
 
 def wait_for(func):
+    """ wait for the function to complete without errors until MAX_WAIT time
+    Args:
+        func (callable): A callable function that returns a AssertionError or 
+        WebDriverException error if it fails
+    Raises:
+        e: AssertionError or WebDriverException on timeout
+    Returns:
+        result of the function
+    """
+
     start_time = time.time()
     while True:
         try:
@@ -32,14 +42,6 @@ def wait_for(func):
                 raise e
             time.sleep(0.1)
 
-def create_pre_authenticated_session(username, password):
-    user = User.objects.create(username=username, password=password)
-    session = SessionStore()
-    session[SESSION_KEY] = user.pk
-    session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
-    session.save()
-    return session.session_key
-
 def get_student_list(browser):
     return browser.find_element_by_id('student_list')
 
@@ -47,6 +49,8 @@ def get_task_list(browser):
     return browser.find_element_by_id('task_list')
 
 def login_user(browser, live_server_url, username, password):
+    """Logins a user given the current browser, live_server_url and auth info """
+
     browser.get(live_server_url + '/users/login/')
 
     input_box = browser.find_element_by_id('id_username')
@@ -57,7 +61,7 @@ def login_user(browser, live_server_url, username, password):
 
     input_box.send_keys(Keys.ENTER)
 
-    wait_for(lambda: browser.find_element_by_id('user')).text
+    wait_for(lambda: browser.find_element_by_id('user'))
 
 class NewUserTest(LiveServerTestCase):
     @classmethod
@@ -214,11 +218,13 @@ class MainFeatureTests(LiveServerTestCase):
         # She enters grades for "Two digit addition" for Sue and Little Bobbie
         # Sue got a 97, little Bobbie got a 85
 
-        student_grade_input1 = self.browser.find_element_by_css_selector('input[data-student-name="Sue"]')
+        student_grade_input1 = \
+            self.browser.find_element_by_css_selector('input[data-student-name="Sue"]')
         student_grade_input1.send_keys('97')
         student_grade_input1.send_keys(Keys.ENTER)
         self.browser.get(self.live_server_url + '/dashboard/')
-        student_grade_input2 = self.browser.find_element_by_css_selector('input[data-student-name="Little Bobbie"]')
+        student_grade_input2 = \
+            self.browser.find_element_by_css_selector('input[data-student-name="Little Bobbie"]')
         student_grade_input2.send_keys('85')
         student_grade_input2.send_keys(Keys.ENTER)
         # Lizzie logs out
@@ -269,4 +275,3 @@ class MainFeatureTests(LiveServerTestCase):
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
-

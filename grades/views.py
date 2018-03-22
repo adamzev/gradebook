@@ -19,4 +19,3 @@ def dashboard(request):
         "tasks": tasks,
     }
     return render(request, 'dashboard.html', view_data)
-

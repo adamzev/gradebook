@@ -1,8 +1,9 @@
 """ Assignments UrlConf """
 
-from django.urls import include, path
-from . import views
 from django.contrib.auth.decorators import login_required
+from django.urls import path
+
+from . import views
 
 urlpatterns = [
     path('tasks/new/', login_required(views.new_task), name='new_task'),
