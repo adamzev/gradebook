@@ -53,10 +53,17 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'gradebook', 'log', 'debug.log'),
             'formatter': 'verbose'
         },
+        'cute_log': {
+            'level': 1,
+            'class': "logging.handlers.SocketHandler",
+            'host': '127.0.0.1',
+            'port': 19996,
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'gradebook': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console', 'file', 'cute_log'],
             'propagate': True,
             'level': 'DEBUG'
         },
